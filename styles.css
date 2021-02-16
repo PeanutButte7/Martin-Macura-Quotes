@@ -24,8 +24,8 @@ body {
 }
 
 #hint {
+    font-family: "Times New Roman", serif;
     font-size: 1.3rem;
     color: #7a7a7a;
     text-align: right;
-    font-family: "Times New Roman", serif;
 }
