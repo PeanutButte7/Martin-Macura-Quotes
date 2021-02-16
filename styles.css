@@ -23,8 +23,8 @@ body {
     font-size: 3rem;
 }
 
-#hint {
-    font-family: "Times New Roman", serif;
+.hint {
+    font-family: serif;
     font-size: 1.3rem;
     color: #7a7a7a;
     text-align: right;
