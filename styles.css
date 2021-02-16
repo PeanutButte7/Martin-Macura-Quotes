@@ -24,6 +24,10 @@ body {
     text-align: right;
 }
 
+.buh {
+    cursor: pointer;
+}
+
 #signature {
     font-size: 3rem;
 }
@@ -44,4 +48,12 @@ footer {
 
 footer span {
     align-self: flex-end;
+}
+
+footer span a {
+    color: #7a7a7a;
+}
+
+#spreadsheet {
+    margin-left: 2rem;
 }
