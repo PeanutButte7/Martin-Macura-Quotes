@@ -59,6 +59,10 @@ footer span a {
 }
 
 @media (max-device-width: 420px) {
+    body {
+        font-size: 5rem;
+    }
+
     .main {
         display: block;
         margin-top: 8rem;
