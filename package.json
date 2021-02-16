@@ -1,0 +1,22 @@
+{
+  "name": "martin-macura-quotes",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PeanutButte7/Martin-Macura-Quotes.git"
+  },
+  "author": "PeanutButte7, Jan Siegl",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PeanutButte7/Martin-Macura-Quotes/issues"
+  },
+  "homepage": "https://github.com/PeanutButte7/Martin-Macura-Quotes#readme",
+  "dependencies": {
+    "none": "^1.0.0"
+  }
+}
