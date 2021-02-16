@@ -60,7 +60,7 @@ footer span a {
 
 @media (max-device-width: 420px) {
     body {
-        font-size: 5rem;
+        font-size: 6rem;
     }
 
     .main {
