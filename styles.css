@@ -25,7 +25,7 @@ body {
 
 #hint {
     font-size: 1.3rem;
-    font-family: 'Newsreader', serif;
-    text-align: right;
     color: #7a7a7a;
+    text-align: right;
+    font-family: 'Newsreader', serif;
 }
