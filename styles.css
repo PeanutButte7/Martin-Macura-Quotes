@@ -1,9 +1,13 @@
 body {
     background-color: #1d1d1d;
     color: white;
-    font-family: 'Italianno', cursive;
+    font-family: serif;
     font-size: 4rem;
     text-align: center;
+}
+
+.content {
+    height: calc(100vh - 240px);
 }
 
 .main {
@@ -14,6 +18,7 @@ body {
 }
 
 .quote {
+    font-family: 'Italianno', cursive;
     display: inline-block;
     width: 40rem;
     text-align: right;
@@ -23,9 +28,20 @@ body {
     font-size: 3rem;
 }
 
-#hint {
-    font-family: "Times New Roman", serif;
+.hint {
     font-size: 1.3rem;
     color: #7a7a7a;
     text-align: right;
+}
+
+footer {
+    font-size: 1.5rem;
+    height: 100px;
+    color: #7a7a7a;
+    display: flex;
+    justify-content: center;
+}
+
+footer span {
+    align-self: flex-end;
 }
