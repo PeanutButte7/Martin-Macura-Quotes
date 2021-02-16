@@ -1,6 +1,24 @@
 body {
-    background-color: black;
+    background-color: #0B0B0B;
     color: white;
     font-family: 'Italianno', cursive;
-    font-size: 48px;
+    font-size: 4rem;
+    text-align: center;
+}
+
+.main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 8rem;
+}
+
+.quote {
+    display: inline-block;
+    width: 40rem;
+    text-align: right;
+}
+
+#signature {
+    font-size: 3rem;
 }
