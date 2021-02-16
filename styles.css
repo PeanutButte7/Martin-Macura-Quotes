@@ -57,3 +57,28 @@ footer span a {
 #spreadsheet {
     margin-left: 2rem;
 }
+
+@media (max-device-width: 420px) {
+    .main {
+        display: block;
+        margin-top: 8rem;
+        text-align: center;
+    }
+
+    .quote, .hint{
+        text-align: center;
+    }
+
+    #signature {
+        text-align: right;
+    }
+
+    footer {
+        font-size: 2rem;
+        flex-direction: column;
+    }
+
+    footer span {
+        align-self: center;
+    }
+}
