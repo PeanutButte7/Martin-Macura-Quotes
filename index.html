@@ -6,6 +6,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Italianno&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="styles.css"/>
+    <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
 </head>
 <body>
     <div class="main">
@@ -18,5 +19,23 @@
             <p id="hint">Kliknutím na boha Kotlinu zobrazíte nový citát</p>
         </div>
     </div>
+
+    <div class="images"></div>
+
+    <script>
+        console.log("won");
+
+        $.getJSON( "https://spreadsheets.google.com/feeds/cells/11cHQwfFYBPVfyic9LLf0-n9GsPyyyEXVhvGQ3AxkYMk/1/public/full?alt=json", function( data ) {
+            var items = [];
+            $.each( data.feed.entry, function( key, val ) {
+                items.push( "<li id='" + key + "'>" + val.gs$cell.inputValue + "</li>" );
+            });
+
+            $( "<ul/>", {
+                "class": "my-new-list",
+                html: items.join( "" )
+            }).appendTo( "body" );
+        });
+    </script>
 </body>
 </html>
