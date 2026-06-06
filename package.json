@@ -17,6 +17,12 @@
   },
   "homepage": "https://github.com/PeanutButte7/Martin-Macura-Quotes#readme",
   "dependencies": {
+    "cowsay": "^1.6.0",
+    "figlet": "^1.11.0",
+    "is-even": "^1.0.0",
+    "is-number": "^7.0.0",
+    "is-odd": "^3.0.1",
+    "left-pad": "^1.3.0",
     "none": "^1.0.0"
   }
 }

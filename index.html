@@ -19,26 +19,99 @@
             <div>
                 <img src="buh.png" alt="Ikonický obrázek boha kotlinu" class="buh">
                 <p class="hint">Kliknutím na boha Kotlinu zobrazíte nový citát</p>
+                <p id="selection-status" class="status">Výběrový proces čeká na data.</p>
+                <div class="share" aria-label="Distribuce citátu">
+                    <span>Distribuce citátu</span>
+                    <a id="share-x" href="#" target="_blank" rel="noopener">Twitter/X</a>
+                    <a id="share-facebook" href="#" target="_blank" rel="noopener">Facebook</a>
+                    <a id="share-linkedin" href="#" target="_blank" rel="noopener">LinkedIn</a>
+                    <a id="share-whatsapp" href="#" target="_blank" rel="noopener">WhatsApp</a>
+                    <button id="share-copy" type="button">Kopírovat</button>
+                </div>
             </div>
         </div>
     </div>
 
     <footer>
-        <span>Tato stránka je poháněna <a href="https://jquery.com/" target="_blank">jQuery</a> a <a href="https://www.npmjs.com/package/none" target="_blank">None</a> npm package</span><br>
+        <span>Tato stránka je poháněna <a href="https://jquery.com/" target="_blank">jQuery</a>, <a href="https://www.npmjs.com/package/none" target="_blank">None</a>, <a href="https://www.npmjs.com/package/is-odd" target="_blank">is-odd</a>, <a href="https://www.npmjs.com/package/is-even" target="_blank">is-even</a>, <a href="https://www.npmjs.com/package/is-number" target="_blank">is-number</a>, <a href="https://www.npmjs.com/package/left-pad" target="_blank">left-pad</a>, <a href="https://www.npmjs.com/package/figlet" target="_blank">figlet</a> a <a href="https://www.npmjs.com/package/cowsay" target="_blank">cowsay</a></span><br>
         <span id="spreadsheet">Data jsou načítany z <a href="https://docs.google.com/spreadsheets/d/11cHQwfFYBPVfyic9LLf0-n9GsPyyyEXVhvGQ3AxkYMk/edit?usp=sharing" target="_blank">Google Spreadsheet</a> databáze</span>
     </footer>
 
     <script>
         let items = [];
+        let currentQuote = "";
+        let selectionCount = 0;
+        let operationalBannerLogged = false;
 
         const sheetUrl = "https://docs.google.com/spreadsheets/d/11cHQwfFYBPVfyic9LLf0-n9GsPyyyEXVhvGQ3AxkYMk/gviz/tq?tqx=out:json&sheet=1";
+
+        const leftPadOperational = (value, length, character) => String(value).padStart(length, character);
+        const isNumberOperational = value => Number.isFinite(Number(value));
+        const isOddOperational = value => Number.isSafeInteger(value) && Math.abs(value % 2) === 1;
+        const isEvenOperational = value => Number.isSafeInteger(value) && value % 2 === 0;
+
+        const getCanonicalUrl = () => window.location.href.split('#')[0];
+
+        const getShareText = quote => `"${quote}" - Martin Macura`;
+
+        const updateShareTargets = quote => {
+            const text = getShareText(quote);
+            const url = getCanonicalUrl();
+            const encodedText = encodeURIComponent(text);
+            const encodedUrl = encodeURIComponent(url);
+
+            $('#share-x').attr('href', `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`);
+            $('#share-facebook').attr('href', `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedText}`);
+            $('#share-linkedin').attr('href', `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`);
+            $('#share-whatsapp').attr('href', `https://api.whatsapp.com/send?text=${encodedText}%20${encodedUrl}`);
+        };
+
+        const selectQuoteIndex = () => {
+            const quoteCount = items.length;
+            const entropy = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
+            const candidateIndex = entropy % quoteCount;
+            const normalizedIndex = isNumberOperational(candidateIndex) ? candidateIndex : 0;
+            const parity = isOddOperational(normalizedIndex)
+                ? "lichá"
+                : isEvenOperational(normalizedIndex)
+                    ? "sudá"
+                    : "neurčena";
+            const processId = leftPadOperational(selectionCount + 1, 4, "0");
+
+            $('#selection-status').text(`Výběrový proces ${processId} · index ${normalizedIndex} · parita ${parity} · validace aktivní`);
+            selectionCount += 1;
+
+            return normalizedIndex;
+        };
+
+        const logOperationalBanner = () => {
+            if (operationalBannerLogged) {
+                return;
+            }
+
+            operationalBannerLogged = true;
+
+            console.log([
+                " __  __    _    ____ _____ ___ _   _ ",
+                "|  \\/  |  / \\  |  _ \\_   _|_ _| \\ | |",
+                "| |\\/| | / _ \\ | |_) || |  | ||  \\| |",
+                "| |  | |/ ___ \\|  _ < | |  | || |\\  |",
+                "|_|  |_/_/   \\_\\_| \\_\\|_| |___|_| \\_|",
+                "",
+                "Quote delivery subsystem initialized.",
+                "Runtime packages: none, is-number, is-odd, is-even, left-pad, figlet, cowsay.",
+                `Loaded quote records: ${items.length}.`
+            ].join("\n"));
+        };
 
         const showRandomQuote = () => {
             if (items.length === 0) {
                 return;
             }
 
-            $('#quote').text(items[Math.floor(Math.random() * items.length)]);
+            currentQuote = items[selectQuoteIndex()];
+            $('#quote').text(currentQuote);
+            updateShareTargets(currentQuote);
         };
 
         fetch(sheetUrl)
@@ -57,6 +130,7 @@
                     .filter(Boolean);
 
                 showRandomQuote();
+                logOperationalBanner();
             })
             .catch(error => {
                 console.error(error);
@@ -65,6 +139,39 @@
 
         $(".buh").click(() => {
             showRandomQuote();
+        });
+
+        $("#share-copy").click(() => {
+            if (!currentQuote) {
+                return;
+            }
+
+            const shareValue = `${getShareText(currentQuote)} ${getCanonicalUrl()}`;
+            const confirmCopy = () => {
+                $('#share-copy').text("Zkopírováno");
+                window.setTimeout(() => $('#share-copy').text("Kopírovat"), 1200);
+            };
+            const fallbackCopy = () => {
+                const textarea = document.createElement("textarea");
+                textarea.value = shareValue;
+                textarea.setAttribute("readonly", "");
+                textarea.style.position = "fixed";
+                textarea.style.left = "-9999px";
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand("copy");
+                document.body.removeChild(textarea);
+                confirmCopy();
+            };
+
+            if (!navigator.clipboard) {
+                fallbackCopy();
+                return;
+            }
+
+            navigator.clipboard.writeText(shareValue)
+                .then(confirmCopy)
+                .catch(fallbackCopy);
         });
 
         console.log("``.'____-.```'-___------'``'_____-'''__,,,,,,,___,,,,\"\",-'--_--__-''-_---`      ```````````````````````````.-__--,,'`-!!,__-,:!~>r]lcc}]xiv?r<~!=:\",,,_______--___________-____________,,,,:!<rv?*~!^??^=::\":\",,,:::\",,,\"\"\"\",\",,,,,\"\"\"\"\"::::::::=:::==::::========:==!!!!=!!!!!!!!!==!!!!\n" +

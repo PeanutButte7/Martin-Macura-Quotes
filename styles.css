@@ -7,12 +7,13 @@ body {
 }
 
 .content {
-    height: calc(100vh - 240px);
+    min-height: calc(100vh - 260px);
 }
 
 .main {
     display: flex;
     align-items: center;
+    gap: 2rem;
     justify-content: center;
     margin-top: 8rem;
 }
@@ -20,12 +21,15 @@ body {
 .quote {
     font-family: 'Italianno', cursive;
     display: inline-block;
+    max-width: calc(100vw - 2rem);
     width: 40rem;
     text-align: right;
 }
 
 .buh {
     cursor: pointer;
+    height: auto;
+    max-width: 100%;
 }
 
 #signature {
@@ -38,12 +42,58 @@ body {
     text-align: right;
 }
 
+.status {
+    color: #7a7a7a;
+    font-family: serif;
+    font-size: 1rem;
+    margin: -0.5rem 0 1rem;
+    text-align: right;
+}
+
+.share {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    font-family: serif;
+    font-size: 1rem;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    max-width: 28rem;
+}
+
+.share span {
+    color: #7a7a7a;
+    flex-basis: 100%;
+    text-align: right;
+}
+
+.share a,
+.share button {
+    background: transparent;
+    border: 1px solid #7a7a7a;
+    color: white;
+    cursor: pointer;
+    font: inherit;
+    padding: 0.45rem 0.7rem;
+    text-decoration: none;
+}
+
+.share a:hover,
+.share button:hover,
+.share a:focus-visible,
+.share button:focus-visible {
+    border-color: white;
+    outline: none;
+}
+
 footer {
     font-size: 1.5rem;
-    height: 100px;
+    min-height: 100px;
     color: #7a7a7a;
     display: flex;
     justify-content: center;
+    line-height: 1.4;
+    padding: 1rem;
 }
 
 footer span {
@@ -58,19 +108,38 @@ footer span a {
     margin-left: 2rem;
 }
 
-@media (max-device-width: 420px) {
+@media (max-width: 700px) {
     body {
-        font-size: 6rem;
+        font-size: 3.2rem;
+    }
+
+    .content {
+        min-height: auto;
     }
 
     .main {
         display: block;
-        margin-top: 8rem;
+        margin: 2rem 1rem 0;
         text-align: center;
     }
 
-    .quote, .hint{
+    .quote {
+        display: block;
+        width: auto;
+    }
+
+    .quote, .hint, .status, .share span {
         text-align: center;
+    }
+
+    .buh {
+        max-width: 20rem;
+    }
+
+    .share {
+        justify-content: center;
+        margin: 0 auto;
+        max-width: 100%;
     }
 
     #signature {
@@ -78,7 +147,7 @@ footer span a {
     }
 
     footer {
-        font-size: 2rem;
+        font-size: 1.2rem;
         flex-direction: column;
     }
 
