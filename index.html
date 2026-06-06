@@ -10,6 +10,11 @@
     <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
 </head>
 <body>
+    <nav class="service-nav" aria-label="Systémové odkazy">
+        <a href="status.html">Stav služby</a>
+        <a href="api.html">API dokumentace</a>
+    </nav>
+
     <div class="content">
         <div class="main">
             <div class="quote">
@@ -38,17 +43,8 @@
     </footer>
 
     <script>
-        let items = [];
         let currentQuote = "";
-        let selectionCount = 0;
         let operationalBannerLogged = false;
-
-        const sheetUrl = "https://docs.google.com/spreadsheets/d/11cHQwfFYBPVfyic9LLf0-n9GsPyyyEXVhvGQ3AxkYMk/gviz/tq?tqx=out:json&sheet=1";
-
-        const leftPadOperational = (value, length, character) => String(value).padStart(length, character);
-        const isNumberOperational = value => Number.isFinite(Number(value));
-        const isOddOperational = value => Number.isSafeInteger(value) && Math.abs(value % 2) === 1;
-        const isEvenOperational = value => Number.isSafeInteger(value) && value % 2 === 0;
 
         const getCanonicalUrl = () => window.location.href.split('#')[0];
 
@@ -66,25 +62,7 @@
             $('#share-whatsapp').attr('href', `https://api.whatsapp.com/send?text=${encodedText}%20${encodedUrl}`);
         };
 
-        const selectQuoteIndex = () => {
-            const quoteCount = items.length;
-            const entropy = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
-            const candidateIndex = entropy % quoteCount;
-            const normalizedIndex = isNumberOperational(candidateIndex) ? candidateIndex : 0;
-            const parity = isOddOperational(normalizedIndex)
-                ? "lichá"
-                : isEvenOperational(normalizedIndex)
-                    ? "sudá"
-                    : "neurčena";
-            const processId = leftPadOperational(selectionCount + 1, 4, "0");
-
-            $('#selection-status').text(`Výběrový proces ${processId} · index ${normalizedIndex} · parita ${parity} · validace aktivní`);
-            selectionCount += 1;
-
-            return normalizedIndex;
-        };
-
-        const logOperationalBanner = () => {
+        const logOperationalBanner = quote => {
             if (operationalBannerLogged) {
                 return;
             }
@@ -100,42 +78,39 @@
                 "",
                 "Quote delivery subsystem initialized.",
                 "Runtime packages: none, is-number, is-odd, is-even, left-pad, figlet, cowsay.",
-                `Loaded quote records: ${items.length}.`
+                `Selected quote record: ${quote.id}.`
             ].join("\n"));
         };
 
         const showRandomQuote = () => {
-            if (items.length === 0) {
-                return;
-            }
+            fetch("/api/quote/random")
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Quote API returned ${response.status}`);
+                    }
 
-            currentQuote = items[selectQuoteIndex()];
-            $('#quote').text(currentQuote);
-            updateShareTargets(currentQuote);
+                    return response.json();
+                })
+                .then(quote => {
+                    const parity = {
+                        odd: "lichá",
+                        even: "sudá",
+                        undetermined: "neurčena"
+                    }[quote.selection.parity] || "neurčena";
+
+                    currentQuote = quote.text;
+                    $('#quote').text(currentQuote);
+                    $('#selection-status').text(`Výběrový proces ${quote.selection.processId} · index ${quote.selection.index} · parita ${parity} · validace aktivní`);
+                    updateShareTargets(currentQuote);
+                    logOperationalBanner(quote);
+                })
+                .catch(error => {
+                    console.error(error);
+                    $('#quote').text("Citáty se nepodařilo načíst.");
+                });
         };
 
-        fetch(sheetUrl)
-            .then(response => response.text())
-            .then(text => {
-                const responseMatch = text.match(/google\.visualization\.Query\.setResponse\((.*)\);/s);
-
-                if (!responseMatch) {
-                    throw new Error("Unexpected Google Sheets response format");
-                }
-
-                const data = JSON.parse(responseMatch[1]);
-
-                items = data.table.rows
-                    .map(row => row.c?.[0]?.v)
-                    .filter(Boolean);
-
-                showRandomQuote();
-                logOperationalBanner();
-            })
-            .catch(error => {
-                console.error(error);
-                $('#quote').text("Citáty se nepodařilo načíst.");
-            });
+        showRandomQuote();
 
         $(".buh").click(() => {
             showRandomQuote();

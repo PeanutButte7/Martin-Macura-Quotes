@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Martin Macura Quotes - API Reference</title>
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Italianno&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="styles.css"/>
+</head>
+<body class="api-page">
+    <nav class="service-nav api-nav" aria-label="Service links">
+        <a href="index.html">Quotes</a>
+        <a href="status.html">Service status</a>
+    </nav>
+
+    <main id="api-reference" class="api-reference"></main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@scalar/api-reference"></script>
+    <script>
+        Scalar.createApiReference("#api-reference", {
+            url: "openapi.json",
+            theme: "alternate"
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,318 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Martin Macura Quote Delivery API",
+    "summary": "Operational interface for quote retrieval and delivery observability.",
+    "description": "This specification defines the Quote Delivery backend surface used by Martin Macura Quotes. The documented interface covers quote selection, health checks, uptime reporting and selection governance metadata.",
+    "version": "1.0.0",
+    "license": {
+      "name": "ISC"
+    }
+  },
+  "servers": [
+    {
+      "url": "/",
+      "description": "Current deployment"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Quotes",
+      "description": "Quote retrieval and distribution"
+    },
+    {
+      "name": "Operations",
+      "description": "Availability and dependency status"
+    },
+    {
+      "name": "Governance",
+      "description": "Selection validation and parity metadata"
+    }
+  ],
+  "paths": {
+    "/api/quote/random": {
+      "get": {
+        "tags": ["Quotes"],
+        "summary": "Select a quote",
+        "description": "Returns one quote selected through the production quote selection pipeline.",
+        "operationId": "selectQuote",
+        "responses": {
+          "200": {
+            "description": "Quote selected successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteSelection"
+                },
+                "examples": {
+                  "selected": {
+                    "value": {
+                      "id": "quote_0007",
+                      "text": "lmao",
+                      "author": "Martin Macura",
+                      "selection": {
+                        "processId": "0007",
+                        "index": 7,
+                        "parity": "odd",
+                        "validated": true
+                      },
+                      "source": {
+                        "system": "google-spreadsheet",
+                        "freshnessSeconds": 42
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/quote/{quoteId}": {
+      "get": {
+        "tags": ["Quotes"],
+        "summary": "Retrieve a quote by identifier",
+        "operationId": "getQuote",
+        "parameters": [
+          {
+            "name": "quoteId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^quote_[0-9]{4}$"
+            },
+            "example": "quote_0007"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Quote record",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Quote"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Quote identifier is outside the governed inventory"
+          }
+        }
+      }
+    },
+    "/api/health": {
+      "get": {
+        "tags": ["Operations"],
+        "summary": "Read service health",
+        "operationId": "getHealth",
+        "responses": {
+          "200": {
+            "description": "All monitored components are operational",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Health"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/status/uptime": {
+      "get": {
+        "tags": ["Operations"],
+        "summary": "Read uptime summary",
+        "operationId": "getUptime",
+        "responses": {
+          "200": {
+            "description": "Rolling uptime metrics",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Uptime"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/governance/selection/{processId}": {
+      "get": {
+        "tags": ["Governance"],
+        "summary": "Inspect a selection process",
+        "operationId": "getSelectionGovernance",
+        "parameters": [
+          {
+            "name": "processId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9]{4}$"
+            },
+            "example": "0007"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Selection process metadata",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SelectionGovernance"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Quote": {
+        "type": "object",
+        "required": ["id", "text", "author"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "quote_0007"
+          },
+          "text": {
+            "type": "string",
+            "example": "lmao"
+          },
+          "author": {
+            "type": "string",
+            "example": "Martin Macura"
+          }
+        }
+      },
+      "QuoteSelection": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Quote"
+          },
+          {
+            "type": "object",
+            "required": ["selection", "source"],
+            "properties": {
+              "selection": {
+                "$ref": "#/components/schemas/SelectionGovernance"
+              },
+              "source": {
+                "$ref": "#/components/schemas/SourceStatus"
+              }
+            }
+          }
+        ]
+      },
+      "SelectionGovernance": {
+        "type": "object",
+        "required": ["processId", "index", "parity", "validated"],
+        "properties": {
+          "processId": {
+            "type": "string",
+            "example": "0007"
+          },
+          "index": {
+            "type": "integer",
+            "minimum": 0,
+            "example": 7
+          },
+          "parity": {
+            "type": "string",
+            "enum": ["odd", "even", "undetermined"],
+            "example": "odd"
+          },
+          "validated": {
+            "type": "boolean",
+            "example": true
+          }
+        }
+      },
+      "SourceStatus": {
+        "type": "object",
+        "required": ["system", "freshnessSeconds"],
+        "properties": {
+          "system": {
+            "type": "string",
+            "example": "google-spreadsheet"
+          },
+          "freshnessSeconds": {
+            "type": "integer",
+            "minimum": 0,
+            "example": 42
+          },
+          "degraded": {
+            "type": "boolean",
+            "example": false
+          }
+        }
+      },
+      "Health": {
+        "type": "object",
+        "required": ["status", "components"],
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": ["operational", "degraded", "unavailable"],
+            "example": "operational"
+          },
+          "components": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["name", "status"],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "Quote Selection Pipeline"
+                },
+                "status": {
+                  "type": "string",
+                  "example": "operational"
+                }
+              }
+            }
+          }
+        }
+      },
+      "Uptime": {
+        "type": "object",
+        "required": ["windowDays", "availabilityPercent", "medianLatencyMs", "sloPercent"],
+        "properties": {
+          "windowDays": {
+            "type": "integer",
+            "example": 90
+          },
+          "availabilityPercent": {
+            "type": "number",
+            "example": 99.982
+          },
+          "medianLatencyMs": {
+            "type": "integer",
+            "example": 18
+          },
+          "p95LatencyMs": {
+            "type": "integer",
+            "example": 64
+          },
+          "sloPercent": {
+            "type": "number",
+            "example": 99.9
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    }
+  }
+}

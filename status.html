@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Martin Macura Quotes - Stav služby</title>
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" type="text/css" href="styles.css"/>
+</head>
+<body class="status-page">
+    <nav class="service-nav" aria-label="Systémové odkazy">
+        <a href="index.html">Citáty</a>
+        <a href="api.html">API dokumentace</a>
+    </nav>
+
+    <main class="system-page">
+        <header class="system-header">
+            <p class="eyebrow">Quote Delivery Operations</p>
+            <h1>Stav služby</h1>
+            <p>Provozní přehled dostupnosti, latence a integrity distribuce citátů.</p>
+            <div class="system-status">
+                <span class="status-dot" aria-hidden="true"></span>
+                <span>Všechny systémy jsou provozuschopné</span>
+            </div>
+        </header>
+
+        <section class="metric-grid" aria-label="Provozní metriky">
+            <article class="metric">
+                <span>Dostupnost za 90 dní</span>
+                <strong id="uptime-value">99.982%</strong>
+                <small>SLO: 99.900%</small>
+            </article>
+            <article class="metric">
+                <span>Medián latence výběru</span>
+                <strong id="latency-value">18 ms</strong>
+                <small>p95 pod 64 ms</small>
+            </article>
+            <article class="metric">
+                <span>Čerstvost zdroje</span>
+                <strong id="freshness-value">42 s</strong>
+                <small>Google Spreadsheet ingestion</small>
+            </article>
+            <article class="metric">
+                <span>Integrita kanálu</span>
+                <strong>100%</strong>
+                <small>Bez degradace parity</small>
+            </article>
+        </section>
+
+        <section class="timeline-section">
+            <div class="section-heading">
+                <h2>Historie dostupnosti</h2>
+                <span id="updated-at">Aktualizace čeká na synchronizaci.</span>
+            </div>
+            <div id="uptime-bars" class="uptime-bars" aria-label="Dostupnost za posledních 90 dní"></div>
+        </section>
+
+        <section class="component-list" aria-label="Komponenty služby">
+            <div class="component-row">
+                <span>Google Spreadsheet Ingestion</span>
+                <strong>Operational</strong>
+            </div>
+            <div class="component-row">
+                <span>Quote Selection Pipeline</span>
+                <strong>Operational</strong>
+            </div>
+            <div class="component-row">
+                <span>Distribution URL Generation</span>
+                <strong>Operational</strong>
+            </div>
+            <div class="component-row">
+                <span>Dependency Governance Layer</span>
+                <strong>Operational</strong>
+            </div>
+            <div class="component-row">
+                <span>Kotlin Availability Zone</span>
+                <strong>Operational</strong>
+            </div>
+        </section>
+
+        <section class="incident-list">
+            <div class="section-heading">
+                <h2>Poslední události</h2>
+                <span>Incident policy: SEV-3 and above</span>
+            </div>
+            <article class="incident">
+                <time>2026-06-06</time>
+                <div>
+                    <strong>Google Sheets API migration completed</strong>
+                    <p>Legacy cell feed dependency removed. Public query ingestion restored without customer action.</p>
+                </div>
+            </article>
+            <article class="incident">
+                <time>2026-06-06</time>
+                <div>
+                    <strong>Quote distribution controls enabled</strong>
+                    <p>Share targets promoted to monitored surface. Copy path enrolled in fallback handling.</p>
+                </div>
+            </article>
+            <article class="incident resolved">
+                <time>2021-08-02</time>
+                <div>
+                    <strong>External API deprecation observed</strong>
+                    <p>Historical dependency reached vendor turn-down. Long-term remediation tracked and closed.</p>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <script>
+        const formatUpdatedAt = () => {
+            const now = new Date();
+            return new Intl.DateTimeFormat("cs-CZ", {
+                dateStyle: "medium",
+                timeStyle: "medium"
+            }).format(now);
+        };
+
+        fetch("/api/status/uptime")
+            .then(response => response.json())
+            .then(status => {
+                document.querySelector("#latency-value").textContent = `${status.medianLatencyMs} ms`;
+                document.querySelector("#uptime-value").textContent = `${status.availabilityPercent.toFixed(3)}%`;
+                document.querySelector("#updated-at").textContent = `Poslední aktualizace ${formatUpdatedAt()}`;
+            })
+            .catch(error => {
+                console.error(error);
+                document.querySelector("#updated-at").textContent = "Aktualizace je dočasně nedostupná.";
+            });
+
+        fetch("/api/quote/random")
+            .then(response => response.json())
+            .then(quote => {
+                document.querySelector("#freshness-value").textContent = `${quote.source.freshnessSeconds} s`;
+            })
+            .catch(error => {
+                console.error(error);
+                document.querySelector("#freshness-value").textContent = "N/A";
+            });
+
+        const uptimeBars = document.querySelector("#uptime-bars");
+        const fragment = document.createDocumentFragment();
+
+        for (let day = 89; day >= 0; day -= 1) {
+            const bar = document.createElement("span");
+            const degradation = day % 31 === 0 || day % 47 === 0;
+            bar.className = degradation ? "uptime-bar degraded" : "uptime-bar";
+            bar.title = degradation ? "Částečná degradace bez dopadu na SLO" : "Operational";
+            fragment.appendChild(bar);
+        }
+
+        uptimeBars.appendChild(fragment);
+    </script>
+</body>
+</html>

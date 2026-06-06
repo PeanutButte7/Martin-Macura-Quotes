@@ -6,6 +6,26 @@ body {
     text-align: center;
 }
 
+.service-nav {
+    display: flex;
+    font-family: 'Italianno', cursive;
+    font-size: 1rem;
+    gap: 1rem;
+    justify-content: flex-end;
+    padding: 1rem 1.5rem 0;
+}
+
+.service-nav a {
+    color: #7a7a7a;
+    text-decoration: none;
+}
+
+.service-nav a:hover,
+.service-nav a:focus-visible {
+    color: white;
+    outline: none;
+}
+
 .content {
     min-height: calc(100vh - 260px);
 }
@@ -108,6 +128,198 @@ footer span a {
     margin-left: 2rem;
 }
 
+.status-page {
+    font-size: 1rem;
+    text-align: left;
+}
+
+.system-page {
+    margin: 0 auto;
+    max-width: 1120px;
+    padding: 4rem 1.5rem;
+}
+
+.system-header {
+    border-bottom: 1px solid #3a3a3a;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+}
+
+.eyebrow {
+    color: #7a7a7a;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    margin: 0 0 0.75rem;
+    text-transform: uppercase;
+}
+
+.system-header h1 {
+    font-size: clamp(2.4rem, 8vw, 5rem);
+    font-weight: 400;
+    line-height: 0.95;
+    margin: 0;
+}
+
+.system-header p {
+    color: #b8b8b8;
+    font-size: 1.15rem;
+    line-height: 1.5;
+    max-width: 42rem;
+}
+
+.system-status {
+    align-items: center;
+    border: 1px solid #4f6f4b;
+    color: #d9f5d6;
+    display: inline-flex;
+    font-size: 1rem;
+    gap: 0.6rem;
+    margin-top: 1rem;
+    padding: 0.7rem 0.9rem;
+}
+
+.status-dot {
+    background: #7bd36f;
+    border-radius: 50%;
+    box-shadow: 0 0 14px rgba(123, 211, 111, 0.6);
+    height: 0.65rem;
+    width: 0.65rem;
+}
+
+.metric-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin-bottom: 2rem;
+}
+
+.metric {
+    border: 1px solid #3a3a3a;
+    padding: 1rem;
+}
+
+.metric span,
+.metric small {
+    color: #7a7a7a;
+    display: block;
+}
+
+.metric strong {
+    display: block;
+    font-size: 2.3rem;
+    font-weight: 400;
+    margin: 0.75rem 0;
+}
+
+.timeline-section,
+.component-list,
+.incident-list {
+    border-top: 1px solid #3a3a3a;
+    padding: 2rem 0;
+}
+
+.section-heading {
+    align-items: baseline;
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.section-heading h2 {
+    font-size: 1.4rem;
+    font-weight: 400;
+    margin: 0;
+}
+
+.section-heading span {
+    color: #7a7a7a;
+}
+
+.uptime-bars {
+    display: grid;
+    gap: 3px;
+    grid-template-columns: repeat(90, minmax(3px, 1fr));
+}
+
+.uptime-bar {
+    background: #7bd36f;
+    display: block;
+    height: 4.5rem;
+}
+
+.uptime-bar.degraded {
+    background: #d6b35d;
+}
+
+.component-row,
+.incident {
+    align-items: baseline;
+    border-bottom: 1px solid #2b2b2b;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr auto;
+    padding: 1rem 0;
+}
+
+.component-row strong {
+    color: #d9f5d6;
+    font-weight: 400;
+}
+
+.incident {
+    grid-template-columns: 10rem 1fr;
+}
+
+.incident time {
+    color: #7a7a7a;
+}
+
+.incident strong {
+    font-size: 1.05rem;
+    font-weight: 400;
+}
+
+.incident p {
+    color: #b8b8b8;
+    line-height: 1.5;
+    margin: 0.35rem 0 0;
+}
+
+.incident.resolved strong {
+    color: #d6b35d;
+}
+
+.api-page {
+    background: #1d1d1d;
+    color: #f2f2f2;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1rem;
+    text-align: left;
+}
+
+.api-page .service-nav {
+    background: #1d1d1d;
+    border-bottom: 1px solid #2b2b2b;
+    font-size: 2rem;
+    justify-content: flex-end;
+    padding: 1rem 1.5rem;
+}
+
+.api-page .service-nav a {
+    color: #a7a7a7;
+    font-weight: 600;
+}
+
+.api-page .service-nav a:hover,
+.api-page .service-nav a:focus-visible {
+    color: white;
+}
+
+.api-page .api-reference {
+    min-height: calc(100vh - 4.5rem);
+}
+
 @media (max-width: 700px) {
     body {
         font-size: 3.2rem;
@@ -153,5 +365,38 @@ footer span a {
 
     footer span {
         align-self: center;
+    }
+
+    .service-nav {
+        justify-content: center;
+        padding: 1rem;
+    }
+
+    .system-page {
+        padding: 2rem 1rem;
+    }
+
+    .metric-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .section-heading,
+    .component-row,
+    .incident {
+        display: block;
+    }
+
+    .section-heading span,
+    .incident time {
+        display: block;
+        margin-top: 0.4rem;
+    }
+
+    .uptime-bars {
+        grid-template-columns: repeat(45, minmax(3px, 1fr));
+    }
+
+    .uptime-bar {
+        height: 2.75rem;
     }
 }
