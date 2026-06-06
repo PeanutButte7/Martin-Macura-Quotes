@@ -31,16 +31,40 @@
     <script>
         let items = [];
 
-        $.getJSON( "https://spreadsheets.google.com/feeds/cells/11cHQwfFYBPVfyic9LLf0-n9GsPyyyEXVhvGQ3AxkYMk/1/public/full?alt=json", function( data ) {
-            $.each( data.feed.entry, function( key, val ) {
-                items.push(val.gs$cell.inputValue);
+        const sheetUrl = "https://docs.google.com/spreadsheets/d/11cHQwfFYBPVfyic9LLf0-n9GsPyyyEXVhvGQ3AxkYMk/gviz/tq?tqx=out:json&sheet=1";
+
+        const showRandomQuote = () => {
+            if (items.length === 0) {
+                return;
+            }
+
+            $('#quote').text(items[Math.floor(Math.random() * items.length)]);
+        };
+
+        fetch(sheetUrl)
+            .then(response => response.text())
+            .then(text => {
+                const responseMatch = text.match(/google\.visualization\.Query\.setResponse\((.*)\);/s);
+
+                if (!responseMatch) {
+                    throw new Error("Unexpected Google Sheets response format");
+                }
+
+                const data = JSON.parse(responseMatch[1]);
+
+                items = data.table.rows
+                    .map(row => row.c?.[0]?.v)
+                    .filter(Boolean);
+
+                showRandomQuote();
+            })
+            .catch(error => {
+                console.error(error);
+                $('#quote').text("Citáty se nepodařilo načíst.");
             });
 
-            $('#quote').text(items[Math.floor(Math.random() * items.length)]);
-        });
-
         $(".buh").click(() => {
-            $('#quote').text(items[Math.floor(Math.random() * items.length)]);
+            showRandomQuote();
         });
 
         console.log("``.'____-.```'-___------'``'_____-'''__,,,,,,,___,,,,\"\",-'--_--__-''-_---`      ```````````````````````````.-__--,,'`-!!,__-,:!~>r]lcc}]xiv?r<~!=:\",,,_______--___________-____________,,,,:!<rv?*~!^??^=::\":\",,,:::\",,,\"\"\"\",\",,,,,\"\"\"\"\"::::::::=:::==::::========:==!!!!=!!!!!!!!!==!!!!\n" +
