@@ -15,6 +15,16 @@ body {
     padding: 1rem 1.5rem 0;
 }
 
+body:not(.status-page):not(.api-page) .service-nav {
+    font-size: 2rem;
+}
+
+.home-page {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    min-height: 100vh;
+}
+
 .service-nav a {
     color: #7a7a7a;
     text-decoration: none;
@@ -27,7 +37,10 @@ body {
 }
 
 .content {
-    min-height: calc(100vh - 260px);
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    min-height: 0;
 }
 
 .main {
@@ -35,7 +48,7 @@ body {
     align-items: center;
     gap: 2rem;
     justify-content: center;
-    margin-top: 8rem;
+    margin: 0 1.5rem;
 }
 
 .quote {
@@ -108,12 +121,11 @@ body {
 
 footer {
     font-size: 1.5rem;
-    min-height: 100px;
     color: #7a7a7a;
     display: flex;
     justify-content: center;
     line-height: 1.4;
-    padding: 1rem;
+    padding: 0 1rem 1rem;
 }
 
 footer span {
@@ -326,7 +338,8 @@ footer span a {
     }
 
     .content {
-        min-height: auto;
+        align-items: start;
+        min-height: 0;
     }
 
     .main {

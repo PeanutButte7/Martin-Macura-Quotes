@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Martin Macura Quotes - Changelog</title>
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" type="text/css" href="styles.css"/>
+</head>
+<body class="status-page">
+    <nav class="service-nav" aria-label="Systémové odkazy">
+        <a href="index.html">Citáty</a>
+        <a href="status.html">Stav služby</a>
+        <a href="api.html">API dokumentace</a>
+    </nav>
+
+    <main class="system-page">
+        <header class="system-header">
+            <p class="eyebrow">Release History</p>
+            <h1>Changelog</h1>
+            <p>Kompletní historie změn platformy pro distribuci citátů Martina Macury.</p>
+        </header>
+
+        <section class="incident-list">
+            <article class="incident">
+                <time>2026-06-06</time>
+                <div>
+                    <strong>MCP server pro agentní integraci</strong>
+                    <p>Platforma vstupuje do agentní éry. AI asistenti nyní mohou přistupovat k citátům přímo přes Model Context Protocol. Pět nástrojů: náhodný citát, citát dle ID, health check, uptime metriky a governance metadata.</p>
+                </div>
+            </article>
+            <article class="incident">
+                <time>2026-06-06</time>
+                <div>
+                    <strong>REST API a OpenAPI specifikace</strong>
+                    <p>Veřejné API pro programový přístup k citátům. Endpointy pro náhodný výběr, vyhledání dle ID, zdravotní stav služby, uptime metriky a governance výběrového procesu. Interaktivní dokumentace přes Scalar.</p>
+                </div>
+            </article>
+            <article class="incident">
+                <time>2026-06-06</time>
+                <div>
+                    <strong>Stránka stavu služby</strong>
+                    <p>Provozní dashboard s metrikami dostupnosti, latence a čerstvosti dat. Historie dostupnosti za 90 dní. Monitoring pěti klíčových komponent včetně Kotlin Availability Zone.</p>
+                </div>
+            </article>
+            <article class="incident">
+                <time>2026-06-06</time>
+                <div>
+                    <strong>Migrace Google Sheets API</strong>
+                    <p>Oprava kritického výpadku způsobeného deprecací Google Sheets API v2. Přechod na veřejný query endpoint. Citáty opět proudí.</p>
+                </div>
+            </article>
+            <article class="incident resolved">
+                <time>2021-08-02</time>
+                <div>
+                    <strong>Google Sheets API v2 deprecation — totální výpadek</strong>
+                    <p>Google vypnul Sheets API v2. Stránka přestala fungovat. Citáty přestaly proudit. Temná éra začala. Trvala skoro 5 let.</p>
+                </div>
+            </article>
+            <article class="incident">
+                <time>2021-01-15</time>
+                <div>
+                    <strong>Spuštění platformy</strong>
+                    <p>První nasazení Martin Macura Quotes. jQuery, Google Spreadsheet jako databáze, bůh Kotlinu jako UI element. Závislosti: none, is-odd, is-even, is-number, left-pad, figlet, cowsay. Vše potřebné pro produkční provoz.</p>
+                </div>
+            </article>
+        </section>
+    </main>
+</body>
+</html>

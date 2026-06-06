@@ -27,6 +27,10 @@
     {
       "name": "Governance",
       "description": "Selection validation and parity metadata"
+    },
+    {
+      "name": "MCP",
+      "description": "Model Context Protocol integration for AI assistants. Configure your MCP client with: `{\"mcpServers\":{\"martin-macura-quotes\":{\"command\":\"npx\",\"args\":[\"martin-macura-quotes-mcp\"]}}}`"
     }
   ],
   "paths": {
@@ -141,6 +145,144 @@
         }
       }
     },
+    "/mcp/get_random_quote": {
+      "get": {
+        "tags": ["MCP"],
+        "summary": "get_random_quote",
+        "description": "Returns a random Martin Macura quote with selection governance metadata and source status. No parameters required.",
+        "operationId": "mcpGetRandomQuote",
+        "responses": {
+          "200": {
+            "description": "MCP tool result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/McpToolResult"
+                },
+                "examples": {
+                  "result": {
+                    "value": {
+                      "content": [
+                        {
+                          "type": "text",
+                          "text": "{\n  \"id\": \"quote_0007\",\n  \"text\": \"lmao\",\n  \"author\": \"Martin Macura\",\n  \"selection\": {\n    \"processId\": \"0007\",\n    \"index\": 7,\n    \"parity\": \"odd\",\n    \"validated\": true\n  },\n  \"source\": {\n    \"system\": \"google-spreadsheet\",\n    \"freshnessSeconds\": 42,\n    \"degraded\": false\n  }\n}"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mcp/get_quote": {
+      "get": {
+        "tags": ["MCP"],
+        "summary": "get_quote",
+        "description": "Returns a specific Martin Macura quote by its identifier.",
+        "operationId": "mcpGetQuote",
+        "parameters": [
+          {
+            "name": "quoteId",
+            "in": "query",
+            "required": true,
+            "description": "Quote ID in format quote_NNNN",
+            "schema": {
+              "type": "string",
+              "pattern": "^quote_[0-9]{4}$"
+            },
+            "example": "quote_0007"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "MCP tool result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/McpToolResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mcp/get_health": {
+      "get": {
+        "tags": ["MCP"],
+        "summary": "get_health",
+        "description": "Checks the health status of all Martin Macura Quotes service components.",
+        "operationId": "mcpGetHealth",
+        "responses": {
+          "200": {
+            "description": "MCP tool result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/McpToolResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mcp/get_uptime": {
+      "get": {
+        "tags": ["MCP"],
+        "summary": "get_uptime",
+        "description": "Returns availability, latency, and SLO metrics for the quote delivery service over a 90-day rolling window.",
+        "operationId": "mcpGetUptime",
+        "responses": {
+          "200": {
+            "description": "MCP tool result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/McpToolResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mcp/get_selection_governance": {
+      "get": {
+        "tags": ["MCP"],
+        "summary": "get_selection_governance",
+        "description": "Inspects the governance metadata for a quote selection process — index, parity, and validation status.",
+        "operationId": "mcpGetSelectionGovernance",
+        "parameters": [
+          {
+            "name": "processId",
+            "in": "query",
+            "required": true,
+            "description": "Four-digit process ID",
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9]{4}$"
+            },
+            "example": "0007"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "MCP tool result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/McpToolResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/governance/selection/{processId}": {
       "get": {
         "tags": ["Governance"],
@@ -175,6 +317,33 @@
   },
   "components": {
     "schemas": {
+      "McpToolResult": {
+        "type": "object",
+        "required": ["content"],
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["type", "text"],
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "text"
+                },
+                "text": {
+                  "type": "string",
+                  "example": "{\"id\": \"quote_0007\", \"text\": \"lmao\", \"author\": \"Martin Macura\"}"
+                }
+              }
+            }
+          },
+          "isError": {
+            "type": "boolean",
+            "example": false
+          }
+        }
+      },
       "Quote": {
         "type": "object",
         "required": ["id", "text", "author"],

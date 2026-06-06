@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.html",
+  "bin": {
+    "martin-macura-quotes-mcp": "./mcp-server.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,6 +20,7 @@
   },
   "homepage": "https://github.com/PeanutButte7/Martin-Macura-Quotes#readme",
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
     "cowsay": "^1.6.0",
     "figlet": "^1.11.0",
     "is-even": "^1.0.0",

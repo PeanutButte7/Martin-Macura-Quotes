@@ -13,13 +13,14 @@
     <nav class="service-nav api-nav" aria-label="Service links">
         <a href="index.html">Quotes</a>
         <a href="status.html">Service status</a>
+        <a href="changelog.html">Changelog</a>
     </nav>
 
-    <main id="api-reference" class="api-reference"></main>
+    <main id="scalar-reference" class="api-reference"></main>
 
     <script src="https://cdn.jsdelivr.net/npm/@scalar/api-reference"></script>
     <script>
-        Scalar.createApiReference("#api-reference", {
+        Scalar.createApiReference("#scalar-reference", {
             url: "openapi.json",
             theme: "alternate"
         });
